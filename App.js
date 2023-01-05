@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './src/Screens/LoginScreen';
 import WebViewIndex from './src/Screens/WebViewIndex';
 import Sidebar from './src/Components/CustomDrawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import { About } from './src/Screens/About'
 
 function HomeScreen({ navigation }) {
   return (
@@ -25,20 +27,37 @@ function NotificationsScreen({ navigation }) {
   );
 }
 
+
+const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+function MyStack() {
+  return (
+    // <Stack.Navigator>
+    <>
+      <Stack.Screen name="Home" component={About} />
+      <Stack.Screen
+        name="Profile"
+        component={LoginScreen}
+        options={{ cardStyleInterpolator: forFade }}
+      />
+    </>
+    // </Stack.Navigator>
+  );
+}
 
 const AppDrawer = () => {
   return (
     // <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
-    <Drawer.Navigator drawerContent={props=> <Sidebar {...props}/>}>
-      <Drawer.Screen 
-      name="Home" 
-      component={HomeScreen} 
+    <Drawer.Navigator drawerContent={props => <Sidebar {...props} />}>
+      <Drawer.Screen
+        name="Home"
+        component={HomeScreen}
       // options={{}}
       />
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
       <Drawer.Screen name="Login" component={LoginScreen} />
-      <Drawer.Screen name="Web View" component={WebViewIndex} />
+      <Drawer.Screen name="Web View" component={WebViewIndex}  options={{ headerShown: false }}/>
     </Drawer.Navigator>
   )
 }
