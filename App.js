@@ -7,7 +7,8 @@ import WebViewIndex from './src/Screens/WebViewIndex';
 import Sidebar from './src/Components/CustomDrawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { About } from './src/Screens/About'
-import {useEffect} from 'react-native'
+import { useEffect } from 'react-native'
+import SplashScreen from './src/Screens/SplashScreen';
 
 function HomeScreen({ navigation }) {
   return (
@@ -54,7 +55,6 @@ function MyStack() {
 
 const AppDrawer = () => {
   return (
-    // <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
     <Drawer.Navigator drawerContent={props => <Sidebar {...props} />}>
       <Drawer.Screen
         name="Home"
@@ -69,45 +69,61 @@ const AppDrawer = () => {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+
+
 
   //====================== On Press back ask to exit
 
-React.useEffect(() => {
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    () => {
-      // Show a prompt asking the user if they want to exit the app
-      Alert.alert(
-        'Exit App',
-        'Are you sure you want to exit?',
-        [
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Show a prompt asking the user if they want to exit the app
+        Alert.alert(
+          'Exit App',
+          'Are you sure you want to exit?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => { },
+              style: 'cancel'
+            },
+            {
+              text: 'OK',
+              onPress: () => BackHandler.exitApp()
+            }
+          ],
           {
-            text: 'Cancel',
-            onPress: () => { },
-            style: 'cancel'
-          },
-          {
-            text: 'OK',
-            onPress: () => BackHandler.exitApp()
+            cancelable: false
           }
-        ],
-        {
-          cancelable: false
-        }
-      );
-      return true;
-    }
-  );
+        );
+        return true;
+      }
+    );
 
-  return () => backHandler.remove();
-}, []);
+    return () => backHandler.remove();
+  }, []);
 
-// ===================== End ask to ed
+  // ===================== End ask to ed
 
 
   return (
-    <NavigationContainer>
-      <AppDrawer />
-    </NavigationContainer>
+    <>
+
+      {isLoading ? <SplashScreen />
+        :
+        <NavigationContainer>
+          <AppDrawer />
+        </NavigationContainer>
+      }
+    </>
   );
 }
